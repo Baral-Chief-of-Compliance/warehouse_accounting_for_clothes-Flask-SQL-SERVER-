@@ -1,12 +1,68 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ title }}</title>
-</head>
-<body>
-  {% for i in inf %}
-    <li>{{ i }}</li>
-  {% endfor %}
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block content %}
+<div class="clients-content">
+    <h1 class="page-title">Список выдачи одежды</h1>
+
+    {% if inf %}
+
+    <table>
+        <thead>
+            <tr>
+                <th>
+                   Вид
+                </th>
+                <th>
+                    Срок носки
+                </th>
+                <th>
+                   Стоимость
+                </th>
+                <th>
+                    Код одежды
+                </th>
+                <th>
+                    Дата получения
+                </th>
+                <th>
+                    Код работника
+                </th>
+                <th>
+                    Фамилия
+                </th>
+                <th>
+                    Имя
+                </th>
+                <th>
+                    Отчество
+                </th>
+                <th>
+                    Должность
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for i in inf %}
+            <tr>
+                <td>{{ i[0] }}</td>
+                <td>{{ i[1] }}</td>
+                <td>{{ i[2] }}руб.</td>
+                <td>{{ i[3] }}</td>
+                <td>{{ i[4] }}</td>
+                <td>{{ i[5] }}</td>
+                <td>{{ i[6] }}</td>
+                <td>{{ i[7] }}</td>
+                <td>{{ i[8] }}</td>
+                <td>{{ i[9] }}</td>
+            </tr>
+
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <div class="absent">Пока ничего нет</div>
+    {% endif %}
+
+</div>
+{% endblock %}
