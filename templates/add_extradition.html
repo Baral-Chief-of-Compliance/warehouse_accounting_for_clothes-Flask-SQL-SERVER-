@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+<body>
+  <form action="{{ url_for('add_extradition') }}" method="post">
+    {% for w in workers %}
+      <input type="radio" id="worker"
+             name="worker" value="{{ w[0] }}">
+      <label for="worker">{{ w }}</label>
+    {% endfor %}}
+
+    {% for c in clothes %}
+      <input type="checkbox" id="clothe"
+             name="clothe" value="{{ c[0] }}">
+      <label for="clothe">{{ c }}</label>
+    {% endfor %}
+
+      <label for="date_for_extradition">Дата выдачи:</label>
+      <input type="date" id="date_for_extradition" name="date">
+      <input placeholder="Код получения" name="code_receiving">
+
+
+      <input type="submit" value="Добавить выдачу">
+  </form>
+</body>
+</html>

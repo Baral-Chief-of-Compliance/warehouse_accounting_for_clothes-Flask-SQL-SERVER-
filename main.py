@@ -132,5 +132,107 @@ def add_worker():
     return redirect(url_for('login'))
 
 
+@app.route('/issuance_information', methods=['GET'])
+def issuance_information():
+    if 'loggedin' in session:
+        if request.method == 'GET':
+            inf = call(
+                'select [РГР_ВАДИМ].[dbo].[СПЕЦОДЕЖДА].[вид],'
+                '[РГР_ВАДИМ].[dbo].[СПЕЦОДЕЖДА].[срок_носки_дни],'
+                '[РГР_ВАДИМ].[dbo].[СПЕЦОДЕЖДА].[стоимость],'
+                '[РГР_ВАДИМ].[dbo].[КОМПЛЕКТ].[код_одежды],'
+                '[РГР_ВАДИМ].[dbo].[СКЛАД].[дата_получения],'
+                '[РГР_ВАДИМ].[dbo].[РАБОТНИК].[код_работника],'
+                '[РГР_ВАДИМ].[dbo].[РАБОТНИК].[фамилия_р],'
+                '[РГР_ВАДИМ].[dbo].[РАБОТНИК].[имя_р],'
+                '[РГР_ВАДИМ].[dbo].[РАБОТНИК].[отчество_р],'
+                '[РГР_ВАДИМ].[dbo].[РАБОТНИК].[должность]'
+                'from [РГР_ВАДИМ].[dbo].[СПЕЦОДЕЖДА] inner join'
+                '[РГР_ВАДИМ].[dbo].[КОМПЛЕКТ] on '
+                '[РГР_ВАДИМ].[dbo].[СПЕЦОДЕЖДА].[код_одежды]'
+                ' = [РГР_ВАДИМ].[dbo].[КОМПЛЕКТ].[код_одежды] inner join'
+                '[РГР_ВАДИМ].[dbo].[СКЛАД] on '
+                '[РГР_ВАДИМ].[dbo].[КОМПЛЕКТ].[код_получения]'
+                ' = [РГР_ВАДИМ].[dbo].[СКЛАД].[код_получения] inner join'
+                '[РГР_ВАДИМ].[dbo].[РАБОТНИК] on '
+                '[РГР_ВАДИМ].[dbo].[СКЛАД].[код_работника]'
+                '= [РГР_ВАДИМ].[dbo].[РАБОТНИК].[код_работника]'
+                'order by [РГР_ВАДИМ].[dbo].[СКЛАД].[дата_получения] desc',
+                commit=False,
+                fetchall=True
+            )
+
+            return render_template('issuance_information.html',
+                                   title='Информация о выдаче',
+                                   inf=inf
+                                   )
+
+    return redirect(url_for('login'))
+
+
+@app.route('/add_extradition', methods=['GET', 'POST'])
+def add_extradition():
+    if 'loggedin' in session:
+        if request.method == 'GET':
+
+            workers = call('SELECT * '
+                           'FROM [РГР_ВАДИМ].[dbo].[РАБОТНИК] '
+                           'INNER JOIN[РГР_ВАДИМ].[dbo].[ЦЕХ] '
+                           'on [РГР_ВАДИМ].[dbo].[РАБОТНИК].[код_цеха] '
+                           '= [РГР_ВАДИМ].[dbo].[ЦЕХ].[код_цеха]',
+                           commit=False,
+                           fetchall=True
+                           )
+
+            clothes = call('select * from [РГР_ВАДИМ].[dbo].[СПЕЦОДЕЖДА]',
+                           commit=False,
+                           fetchall=True
+                           )
+
+            return render_template('add_extradition.html',
+                                   title='Организовать выдачу',
+                                   workers=workers,
+                                   clothes=clothes
+                                   )
+
+        elif request.method == 'POST':
+            worker_id = request.form['worker']
+            clothes_id = request.form.getlist('clothe')
+            date = request.form['date']
+            code_receiving = request.form['code_receiving']
+
+            print(worker_id, clothes_id, date, code_receiving)
+
+            call('insert into'
+                 '[РГР_ВАДИМ].[dbo].[СКЛАД] ('
+                 '[код_получения],'
+                 '[код_работника],'
+                 '[дата_получения])'
+                 'values (?, ?, ?)',
+                 [code_receiving, worker_id, date],
+                 commit=True,
+                 fetchall=False
+                 )
+
+            for cl in clothes_id:
+                call('insert into'
+                     '[РГР_ВАДИМ].[dbo].[КОМПЛЕКТ] ('
+                     '[код_получения],'
+                     '[код_одежды])'
+                     'values (?, ?)',
+                     [code_receiving, int(cl)],
+                     commit=True,
+                     fetchall=False
+                     )
+
+            return render_template('inf_about_add.html',
+                                   title='Информация была добавлена',
+                                   code_receiving=code_receiving,
+                                   date=date
+                                   )
+
+    return redirect(url_for('login'))
+
+
 if __name__ == '__main__':
     app.run(debug=True)
