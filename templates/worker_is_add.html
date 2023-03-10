@@ -1,12 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ title }}</title>
-</head>
-<body>
-Рабочий {{worker_code}} {{surname}} {{name}} {{patronomic}} должность {{role}} с персональной скидкой {{sale}}
+{% extends "base.html" %}
 
-<a href="{{ url_for('add_worker')}}">Назад</a>
-</body>
-</html>
+{% block content %}
+    <div class="clients-content">
+        <div class="table-name">
+            Рабочий {{worker_code}} {{surname}}
+            {{name}} {{patronomic}} должность
+            {{role}} с персональной скидкой {{sale}}
+        </div>
+
+        <a href="{{ url_for('add_worker')}}">Назад</a>
+
+
+    </div>
+
+{% endblock %}

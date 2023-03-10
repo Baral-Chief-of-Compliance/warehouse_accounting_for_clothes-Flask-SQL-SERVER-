@@ -14,7 +14,9 @@ def home():
     if 'loggedin' in session:
         if request.method == 'GET':
 
-            return render_template('home.html', title='Главная', login=session['username'])
+            return render_template('home.html',
+                                   title='Главная',
+                                   login=session['username'])
 
     return redirect(url_for('login'))
 
@@ -70,7 +72,10 @@ def workers():
                            fetchall=True
                            )
 
-            return render_template('workers.html', title='Работники', workers=workers)
+            return render_template('workers.html',
+                                   title='Работники',
+                                   workers=workers,
+                                   login=session['username'])
 
     return redirect(url_for('login'))
 
@@ -87,7 +92,8 @@ def add_worker():
 
             return render_template('add_worker.html',
                                    title='Добавить работника',
-                                   shops=shops
+                                   shops=shops,
+                                   login=session['username']
                                    )
 
         elif request.method == 'POST':
@@ -126,7 +132,8 @@ def add_worker():
                                patronomic=patronomic,
                                role=role,
                                sale=sale,
-                               worker_code=worker_code
+                               worker_code=worker_code,
+                               login=session['username']
                                )
 
     return redirect(url_for('login'))
@@ -164,7 +171,8 @@ def issuance_information():
 
             return render_template('issuance_information.html',
                                    title='Информация о выдаче',
-                                   inf=inf
+                                   inf=inf,
+                                   login=session['username']
                                    )
 
     return redirect(url_for('login'))
@@ -192,7 +200,8 @@ def add_extradition():
             return render_template('add_extradition.html',
                                    title='Организовать выдачу',
                                    workers=workers,
-                                   clothes=clothes
+                                   clothes=clothes,
+                                   login=session['username']
                                    )
 
         elif request.method == 'POST':
@@ -228,7 +237,8 @@ def add_extradition():
             return render_template('inf_about_add.html',
                                    title='Информация была добавлена',
                                    code_receiving=code_receiving,
-                                   date=date
+                                   date=date,
+                                   login=session['username']
                                    )
 
     return redirect(url_for('login'))
