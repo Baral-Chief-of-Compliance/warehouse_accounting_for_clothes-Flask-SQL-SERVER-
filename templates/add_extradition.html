@@ -1,29 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ title }}</title>
-</head>
-<body>
-  <form action="{{ url_for('add_extradition') }}" method="post">
-    {% for w in workers %}
-      <input type="radio" id="worker"
-             name="worker" value="{{ w[0] }}">
-      <label for="worker">{{ w }}</label>
-    {% endfor %}}
+{% extends "base.html" %}
 
-    {% for c in clothes %}
-      <input type="checkbox" id="clothe"
-             name="clothe" value="{{ c[0] }}">
-      <label for="clothe">{{ c }}</label>
-    {% endfor %}
+{% block content %}
+<div class="clients-content" >
 
-      <label for="date_for_extradition">Дата выдачи:</label>
-      <input type="date" id="date_for_extradition" name="date">
-      <input placeholder="Код получения" name="code_receiving">
+    <h1 class="page-title">Оформить выдачу</h1>
+      <form class="clients-form" action="{{ url_for('add_extradition') }}" method="post">
+        <div>
+        {% for w in workers %}
+          <input class="client-checkbox" type="radio" id="worker"
+                 name="worker" value="{{ w[0] }}">
+                {{ w[0] }}
+                {{ w[2] }}
+                {{ w[3] }}
+                {{ w[4] }}
+                {{ w[5] }}
+                {{ w[6] }}%
+
+          <br>
+        {% endfor %}
+        </div>
+
+        <div>
+        {% for c in clothes %}
+          <input class="client-checkbox" type="checkbox" id="clothe"
+                 name="clothe" value="{{ c[0] }}">
+            {{ c[1] }}
+            {{ c[3] }}руб.
+          <br>
+        {% endfor %}
+        </div>
+
+        <div class="label-info">
+          Дата выдачи
+        </div>
+        <input class="clients-input" type="date" id="date_for_extradition" name="date">
+
+        <div class="label-info">
+          Код состоит: код сотрудника - последнии цифры года
+        </div>
+        <input class="clients-input" placeholder="Код получения" name="code_receiving">
 
 
-      <input type="submit" value="Добавить выдачу">
-  </form>
-</body>
-</html>
+        <input class="clients-input-button" type="submit" value="Добавить выдачу">
+      </form>
+
+</div>
+{% endblock %}
+
