@@ -1,27 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ title }}</title>
-</head>
-<body>
+{% extends "base.html" %}
 
+{% block content %}
+<div class="clients-content" >
 
-    <form action="{{ url_for('add_worker') }}" method="post">
+    <h1 class="page-title">Добавить работника</h1>
 
+    <form class="clients-form" action="{{ url_for('add_worker') }}" method="post" autocomplete="off">
+            <div>
             {% for s in shops %}
-                <input type="radio" id="shops"
-                    name="shop" value="{{ s[0] }}">
-                <label for="shops">{{ s[1] }}</label>
+                <input class="client-checkbox" type="radio" id="shops"
+                    name="shop" value="{{ s[0] }}">{{ s[1] }}<br>
             {% endfor %}
-        <input name="worker_code" placeholder="Код работника" required>
-        <input name="surname" placeholder="Фамилия" required>
-        <input name="name" placeholder="Имя" required>
-        <input name="patronomic" placeholder="Отчество">
-        <input name="role" placeholder="Должность" required>
-        <input name="sale" placeholder="Скидка" required>
+            </div>
+        <input class="clients-input" name="worker_code" placeholder="Код работника" required>
+        <input class="clients-input" name="surname" placeholder="Фамилия" required>
+        <input class="clients-input" name="name" placeholder="Имя" required>
+        <input class="clients-input" name="patronomic" placeholder="Отчество">
+        <input class="clients-input" name="role" placeholder="Должность" required>
+        <input class="clients-input" name="sale" placeholder="Скидка" required>
 
-        <input type="submit" value="Добавить работника">
+        <input class="clients-input-button" type="submit" value="Добавить работника">
     </form>
-</body>
-</html>
+
+</div>
+{% endblock %}
