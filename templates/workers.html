@@ -1,14 +1,74 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ title }}</title>
-</head>
-<body>
+{% extends "base.html" %}
 
+{% block content %}
+<div class="clients-content">
+    <h1 class="page-title">Список клиентов</h1>
+    <div class="table-name">Физические лица</div>
+    {% if workers %}
+    <table>
+        <thead>
+            <tr>
+                <th>
+                   Код работника
+                </th>
+                <th>
+                    Фамилия
+                </th>
+                <th>
+                   Имя
+                </th>
+                <th>
+                    Отчество
+                </th>
+                <th>
+                    Должность
+                </th>
+                <th>
+                    Скидка
+                </th>
+                <th>
+                    Код цеха
+                </th>
+                <th>
+                    Название цеха
+                </th>
+            </tr>
+        </thead>
 
-  {% for w in workers %}
-    <li>{{w}}</li>
-  {% endfor %}
-</body>
-</html>
+        <tbody>
+            {% for w in workers %}
+            <tr>
+                <td>
+                    {{w[0]}}
+                </td>
+                <td>
+                    {{w[2]}}
+                </td>
+                <td>
+                    {{w[3]}}
+                </td>
+                <td>
+                    {{w[4]}}
+                </td>
+                <td>
+                    {{w[5]}}
+                </td>
+                <td>
+                    {{w[6]}}%
+                </td>
+                <td>
+                    {{w[7]}}
+                </td>
+                <td>
+                    {{w[8]}}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="absent">Пока ничего нет</div>
+    {% endif %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% if title %}
+        <title>{{ title }} - Склад</title>
+    {% else %}
+        <title>Alexo</title>
+    {% endif %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css')}}">
+    <link rel="stylesheet" href="../static/css/base.css">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='svg/stock.svg')}}"/>
+</head>
+<body>
+    <div class="navigation">
+        <div class="navigation-variant">
+
+            <div class="dropdown">
+                <button onclick="myFunction('clientDropdown')" class="nav-selection">Работники</button>
+                <div id="clientDropdown" class="dropdown-content">
+                    <a href="#">Добавить</a>
+                    <a href="#">Найти</a>
+                    <a href="{{ url_for('workers')}}">Список</a>
+                </div>
+            </div>
+
+            <div class="dropdown">
+                <button onclick="myFunction('reoDropdown')" class="nav-selection">Объекты недвижимости</button>
+                <div id="reoDropdown" class="dropdown-content">
+                    <a href="#">Добавить</a>
+                    <a href="#">Найти</a>
+                    <a href="#">Список</a>
+                </div>
+            </div>
+
+            <div class="dropdown">
+                <button onclick="myFunction('employeeDropdown')" class="nav-selection">Сотрудники</button>
+                <div id="employeeDropdown" class="dropdown-content">
+                    <a href="#">Добавить</a>
+                    <a href="#">Список</a>
+                </div>
+            </div>
+
+            <div class="dropdown">
+                <button onclick="myFunction('applicationsDropdown')" class="nav-selection">Заявки</button>
+                <div id="applicationsDropdown" class="dropdown-content">
+                    <a href="#">Добавить</a>
+                    <a href="#">По датам</a>
+                    <a href="#">Список</a>
+                </div>
+            </div>
+
+
+            <div class="nav-operator-info">
+                <div class="nav-operator-name">
+                    {{ login }}
+                </div>
+                <div class="nav-operator-del">
+                    |
+                </div>
+                <div class="nav-operator-exit">
+                    <a id='a-exit' href="{{ url_for('logout')}}">выход</a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <body>
+        <div class="main-content">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </body>
+    <div class="footer">
+        @2023, fsociety
+    </div>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/dropdown.js')}}"></script>
+</body>
+</html>
