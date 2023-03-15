@@ -31,6 +31,13 @@
                 </div>
             </div>
 
+            <div class="dropdown">
+                <button onclick="myFunction('workshopsDropdown')" class="nav-selection">Цехи</button>
+                <div id="workshopsDropdown" class="dropdown-content">
+                    <a href="{{ url_for('workshops') }}">Список</a>
+                </div>
+            </div>
+
             <div class="nav-operator-info">
                 <div class="nav-operator-name">
                     {{ login }}

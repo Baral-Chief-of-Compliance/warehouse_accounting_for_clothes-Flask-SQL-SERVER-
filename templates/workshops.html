@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="clients-content">
+    <h1 class="page-title">Список цехов</h1>
+    {% if workshops %}
+ <table>
+        <thead>
+            <tr>
+                <th>
+                   Код цеха
+                </th>
+                <th>
+                    Название
+                </th>
+                <th>
+                   Количество работников
+                </th>
+            </tr>
+        </thead>
+
+         <tbody>
+                {% for w in workshops %}
+                <tr>
+                    <td>
+                        {{w.id}}
+                    </td>
+                    <td>
+                        {{w.name}}
+                    </td>
+                    <td>
+                        {{w.humans}}
+                    </td>
+                </tr>
+                {% endfor %}
+         </tbody>
+ </table>
+    {% else %}
+    <div class="absent">Пока ничего нет</div>
+    {% endif %}
+
+</div>
+{% endblock %}
