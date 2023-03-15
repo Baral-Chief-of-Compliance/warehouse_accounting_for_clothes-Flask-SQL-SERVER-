@@ -65,6 +65,8 @@ def login():
                          'from Operator '
                          'where login = %s', [username], commit=False, fetchall=False)
 
+        print(hash_pass)
+
         if check_password(password, hash_pass[0]):
             operator = call('select * '
                             'from Operator '
@@ -133,7 +135,8 @@ def add_worker():
             patronomic = request.form['patronomic']
             role = request.form['role']
             sale = request.form['sale']
-            worker_code = request.form['worker_code']
+            worker_code = call('select max(РАБОТНИК.код_работника) from РАБОТНИК', commit=False, fetchall=False)
+            print(worker_code[0]+1)
 
             print(shops_id, surname, name, patronomic, role, sale)
 
@@ -148,7 +151,7 @@ def add_worker():
                 'РАБОТНИК.должность,'
                 'РАБОТНИК.скидка_проц)'
                 'values (%s, %s, %s, %s, %s, %s, %s)',
-                [worker_code, shops_id, surname, name, patronomic, role, sale],
+                [worker_code[0]+1, shops_id, surname, name, patronomic, role, sale],
                 commit=True,
                 fetchall=False
             )
@@ -162,7 +165,7 @@ def add_worker():
                                patronomic=patronomic,
                                role=role,
                                sale=sale,
-                               worker_code=worker_code,
+                               worker_code=worker_code[0]+1,
                                login=session['username']
                                )
 
@@ -173,28 +176,7 @@ def add_worker():
 def issuance_information():
     if 'loggedin' in session:
         if request.method == 'GET':
-            inf = call(
-                'select СПЕЦОДЕЖДА.вид,'
-                'СПЕЦОДЕЖДА.срок_носки_дни,'
-                'СПЕЦОДЕЖДА.стоимость,'
-                'КОМПЛЕКТ.код_одежды,'
-                'СКЛАД.дата_получения,'
-                'РАБОТНИК.код_работника,'
-                'РАБОТНИК.фамилия_р,'
-                'РАБОТНИК.имя_р,'
-                'РАБОТНИК.отчество_р,'
-                'РАБОТНИК.должность'
-                'from СПЕЦОДЕЖДА inner join'
-                'КОМПЛЕКТ on '
-                'СПЕЦОДЕЖДА.код_одежды'
-                ' = КОМПЛЕКТ.код_одежды inner join'
-                'СКЛАД on '
-                'КОМПЛЕКТ.код_получения'
-                ' = СКЛАД.код_получения inner join'
-                'РАБОТНИК on '
-                'СКЛАД.код_работника'
-                '= РАБОТНИК.код_работника'
-                'order by СКЛАД.дата_получения desc',
+            inf = call('select СПЕЦОДЕЖДА.вид, СПЕЦОДЕЖДА.срок_носки_дни, СПЕЦОДЕЖДА.стоимость, КОМПЛЕКТ.код_одежды, СКЛАД.дата_получения, РАБОТНИК.код_работника, РАБОТНИК.фамилия_р, РАБОТНИК.имя_р, РАБОТНИК.отчество_р, РАБОТНИК.должность from СПЕЦОДЕЖДА inner join КОМПЛЕКТ on СПЕЦОДЕЖДА.код_одежды = КОМПЛЕКТ.код_одежды inner join СКЛАД on КОМПЛЕКТ.код_получения = СКЛАД.код_получения inner join РАБОТНИК on  СКЛАД.код_работника = РАБОТНИК.код_работника order by СКЛАД.дата_получения desc',
                 commit=False,
                 fetchall=True
             )
@@ -238,12 +220,18 @@ def add_extradition():
             worker_id = request.form['worker']
             clothes_id = request.form.getlist('clothe')
             date = request.form['date']
-            code_receiving = request.form['code_receiving']
 
+            code = call('select count(*) from склад', commit=False, fetchall=False)
+            code_count = int(code[0])+1
+
+            if len(str(code_count)) == 1:
+                code_count = f'0{code_count}'
+
+            code_receiving = f'{code_count}-{str(date)[2]}{str(date)[3]}'
             print(worker_id, clothes_id, date, code_receiving)
 
             call('insert into'
-                 'СКЛАД ('
+                 ' СКЛАД ('
                  'код_получения,'
                  'код_работника,'
                  'дата_получения)'
@@ -255,7 +243,7 @@ def add_extradition():
 
             for cl in clothes_id:
                 call('insert into'
-                     'КОМПЛЕКТ ('
+                     ' КОМПЛЕКТ ('
                      'код_получения,'
                      'код_одежды)'
                      'values (%s, %s)',
@@ -287,10 +275,10 @@ def workshops():
                  fetchall=True)
 
             for w in workshops:
-                humans = call('select count(*) from '
+                humans = call('select count(РАБОТНИК.код_цеха) from '
                               'РАБОТНИК where '
                               'РАБОТНИК.код_цеха = %s',
-                              w[0], commit=False, fetchall=False)
+                              [w[0]], commit=False, fetchall=False)
 
                 map_worksops.append({
                     'id': w[0],
